@@ -1,0 +1,17 @@
+{
+  "author": "isyoon <isyoonn@gmail.com>",
+  "name": "ss-nodejs",
+  "description": "springsprout nodejs submodule",
+  "version": "0.0.0",
+  "homepage": "http://springsprout.org:10004",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/isyoon/ss-nodejs.git"
+  },
+  "engines": {
+    "node": "~0.6.11"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
