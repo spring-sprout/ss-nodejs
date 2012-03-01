@@ -13,7 +13,7 @@ var chat = io
       });
 
       socket.on('getIn', function (data) {
-        // get into Spring
+        // checkin
         var req = httpClient.request('GET', '/chat/in?sock=' + socket.id + '&email=' + data.email);
         req.end();
         req.on('response', function (response) {
@@ -27,7 +27,7 @@ var chat = io
       });
 
       socket.on('disconnect', function () {
-        // get into Spring
+        // checkout
         var req = httpClient.request('GET', '/chat/out?sock=' + socket.id);
         req.end();
         req.on('response', function (response) {
@@ -45,7 +45,7 @@ var suda = io
     .of('/suda')
     .on('connection', function (socket) {
       socket.on('message', function(data){
-        // save to server
+        // save
         var req = httpClient.request('GET', '/suda/add?userId=' + data.id + "&message=" + data.msg);
         req.end();
         data.writtenDate = (+new Date());
