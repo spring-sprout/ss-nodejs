@@ -5,7 +5,7 @@ var chat = io
     .of('/chat')
     .on('connection', function (socket) {
       socket.on('message', function (data) {
-        console.log(data);
+//        console.log(data);
       });
 
       socket.on('chat', function (data) {
@@ -48,7 +48,7 @@ var suda = io
         // save to server
         var req = httpClient.request('GET', '/suda/add?userId=' + data.id + "&message=" + data.msg);
         req.end();
-
+        data.writtenDate = (+new Date());
         suda.emit('message', data);
       });
     });
