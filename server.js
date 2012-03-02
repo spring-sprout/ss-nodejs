@@ -1,54 +1,28 @@
-var io = require('socket.io').listen(8888);
-var httpClient = require('http').createClient(8080, 'localhost');
-
-var chat = io
-    .of('/chat')
-    .on('connection', function (socket) {
-      socket.on('message', function (data) {
-//        console.log(data);
-      });
-
-      socket.on('chat', function (data) {
-        chat.emit('message', data);
-      });
-
-      socket.on('getIn', function (data) {
-        // checkin
-        var req = httpClient.request('GET', '/chat/in?sock=' + socket.id + '&email=' + data.email);
-        req.end();
-        req.on('response', function (response) {
-          response.on('data', function (chunk) {
-//                    console.log('BODY: ' + chunk);
-            chat.emit('refresh', {msg:'update'});
-          });
-        });
-        chat.emit('message', data);
-//            console.log(data);
-      });
-
-      socket.on('disconnect', function () {
-        // checkout
-        var req = httpClient.request('GET', '/chat/out?sock=' + socket.id);
-        req.end();
-        req.on('response', function (response) {
-          response.on('data', function (chunk) {
-//                    console.log('BODY: ' + chunk);
-            chat.emit('refresh', {msg:'update'});
-          });
-        });
-      });
-
-      socket.emit('message', { who:'springsprout', msg:'방가방가' });
-    });
-
-var suda = io
-    .of('/suda')
-    .on('connection', function (socket) {
-      socket.on('message', function(data){
-        // save
-        var req = httpClient.request('GET', '/suda/add?userId=' + data.id + "&message=" + data.msg);
-        req.end();
-        data.writtenDate = (+new Date());
-        suda.emit('message', data);
-      });
-    });
+var port       = process.env.APP_PORT||8888
+  , io         = require('socket.io').listen(port)
+  , httpClient = require('http')
+  , chat       = require('./modules/chat')
+  , SSWebOpts  = {
+        host : process.env.SS_WEB_HOST||'localhost'
+      , port : process.env.SS_WEB_PORT||80
+    };
+    
+io.configure(function(){
+  io.set('log level', 0);
+  io.set('transports', [
+      'websocket'
+    , 'flashsocket'
+    , 'htmlfile'
+    , 'xhr-polling'
+    , 'jsonp-polling'
+  ]);
+});
+  
+chat.configure({
+    io : io
+  , httpClient : httpClient
+  , SSWebOpts  : SSWebOpts
+}).init();
+console.log('Server start... port['+port+']');
+console.log('springsprout server host ['+SSWebOpts.host+']');
+console.log('springsprout server port ['+SSWebOpts.port+']');

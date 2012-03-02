@@ -3,3 +3,6 @@ node_modules/
 
 ## intellij
 .idea/
+
+# backup files
+___*.js
