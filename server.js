@@ -2,6 +2,7 @@ var port       = process.env.APP_PORT||8888
   , io         = require('socket.io').listen(port)
   , httpClient = require('http')
   , chat       = require('./modules/chat')
+  , suda       = require('./modules/suda')
   , SSWebOpts  = {
         host : process.env.SS_WEB_HOST||'localhost'
       , port : process.env.SS_WEB_PORT||80
@@ -19,6 +20,12 @@ io.configure(function(){
 });
   
 chat.configure({
+    io : io
+  , httpClient : httpClient
+  , SSWebOpts  : SSWebOpts
+}).init();
+
+suda.configure({
     io : io
   , httpClient : httpClient
   , SSWebOpts  : SSWebOpts
