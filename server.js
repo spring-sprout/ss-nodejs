@@ -1,12 +1,12 @@
 var port       = process.env.APP_PORT||8888
   , io         = require('socket.io').listen(port)
-  , httpClient = require('http')
-  , chat       = require('./modules/chat')
-  , suda       = require('./modules/suda')
-  , SSWebOpts  = {
+  , SSWEBOpts  = {
         host : process.env.SS_WEB_HOST||'localhost'
       , port : process.env.SS_WEB_PORT||80
-    };
+    }
+  , httpHelper = require('./modules/httpHelper').configure(SSWEBOpts)
+  , chat       = require('./modules/chat').load(io,httpHelper)
+  , suda       = require('./modules/suda').load(io,httpHelper);
     
 io.configure(function(){
   io.set('log level', 0);
@@ -18,18 +18,6 @@ io.configure(function(){
     , 'jsonp-polling'
   ]);
 });
-  
-chat.configure({
-    io : io
-  , httpClient : httpClient
-  , SSWebOpts  : SSWebOpts
-}).init();
-
-suda.configure({
-    io : io
-  , httpClient : httpClient
-  , SSWebOpts  : SSWebOpts
-}).init();
 console.log('Server start... port['+port+']');
-console.log('springsprout server host ['+SSWebOpts.host+']');
-console.log('springsprout server port ['+SSWebOpts.port+']');
+console.log('springsprout server host ['+SSWEBOpts.host+']');
+console.log('springsprout server port ['+SSWEBOpts.port+']');
