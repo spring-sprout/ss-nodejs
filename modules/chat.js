@@ -27,16 +27,17 @@ var __loadModule = function(){
       
       socket.on('getIn', function (data) {
         // checkin
-        httpHelper.get('/chat/in?sock=' + socket.id + '&email=' + data.email,function(err,chunk){
-          chat.emit('refresh', {msg:'update',isError:!!(err)});
-        });
+        // httpHelper.get('/chat/in?sock=' + socket.id + '&email=' + data.email,function(err,chunk){
+        //   chat.emit('refresh', {msg:'update',isError:!!(err)});
+        // });
+		chat.emit("message", data);
       });
 
       socket.on('disconnect', function () {
         // checkout
-        httpHelper.get('/chat/out?sock=' + socket.id,function(err,chunk){
-          chat.emit('refresh', {msg:'update',isError:!!(err)});
-        });
+        // httpHelper.get('/chat/out?sock=' + socket.id,function(err,chunk){
+        //           chat.emit('refresh', {msg:'update',isError:!!(err)});
+        //         });
       });
     });
   return Chat;  
